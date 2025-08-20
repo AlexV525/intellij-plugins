@@ -26,20 +26,18 @@ class DartInlayHintsService(private val project: Project) {
     val server = DartAnalysisServerService.getInstance(project)
 
     // Try server-backed inlay hints via LSP-over-DAS. Fallback to PSI if unavailable.
-    val fileUri = server.execution_mapUri(vFile.path, null)
-    if (fileUri != null) {
-      val range = DartLspRange(DartLspPosition(0, 0), DartLspPosition(editor.document.lineCount, 0))
-      val serverHints = server.lspMessage_textDocument_inlayHint(fileUri, range)
-      if (!serverHints.isNullOrEmpty()) {
-        return serverHints
-          .filter { it.kind == "parameter" }
-          .map { hint ->
-            // Convert to inline offset as early as possible; if conversion fails, skip.
-            val offset = getOffsetInDocument(editor.document, hint.position)
-            if (offset != null) DartInlayHint(hint.label, DartInlayHintKind.Parameter, offset = offset) else null
-          }
-          .filterNotNull()
-      }
+    val fileUri = server.getFileUri(vFile)
+    val range = DartLspRange(DartLspPosition(0, 0), DartLspPosition(editor.document.lineCount, 0))
+    val serverHints = server.lspMessage_textDocument_inlayHint(fileUri, range)
+    if (!serverHints.isNullOrEmpty()) {
+      return serverHints
+        .filter { it.kind == "parameter" }
+        .map { hint ->
+          // Convert to inline offset as early as possible; if conversion fails, skip.
+          val offset = getOffsetInDocument(editor.document, hint.position)
+          if (offset != null) DartInlayHint(hint.label, DartInlayHintKind.Parameter, offset = offset) else null
+        }
+        .filterNotNull()
     }
 
     // PSI fallback
