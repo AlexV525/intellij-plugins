@@ -1088,6 +1088,10 @@ public interface AnalysisServer {
 
   public void lsp_connectToDtd(String uri);
 
+  public void lspMessage_textDocument_inlayHint(String uri,
+      org.dartlang.analysis.server.protocol.DartLspRange range,
+      com.google.dart.server.DartLspInlayHintsConsumer consumer);
+
   /**
    * {@code server.shutdown}
    *

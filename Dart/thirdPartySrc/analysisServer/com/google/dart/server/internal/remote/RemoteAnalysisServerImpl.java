@@ -741,6 +741,18 @@ public abstract class RemoteAnalysisServerImpl implements AnalysisServer {
     sendRequestToServer(id, RequestUtilities.generateLSPMessage_dart_textDocumentContent(id, uri), consumer);
   }
 
+  @Override
+  public void lspMessage_textDocument_inlayHint(String uri,
+                                                org.dartlang.analysis.server.protocol.DartLspRange range,
+                                                com.google.dart.server.DartLspInlayHintsConsumer consumer) {
+    String id = generateUniqueId();
+    JsonObject request = RequestUtilities.generateLSPMessage_textDocument_inlayHint(
+      id, uri,
+      range.getStart().getLine(), range.getStart().getCharacter(),
+      range.getEnd().getLine(), range.getEnd().getCharacter());
+    sendRequestToServer(id, request, new com.google.dart.server.internal.remote.processor.DartLspInlayHintsProcessor(consumer));
+  }
+
   /**
    * Starts the analysis server.
    *
