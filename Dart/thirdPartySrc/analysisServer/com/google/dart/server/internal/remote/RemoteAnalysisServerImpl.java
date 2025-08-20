@@ -750,8 +750,7 @@ public abstract class RemoteAnalysisServerImpl implements AnalysisServer {
       id, uri,
       range.getStart().getLine(), range.getStart().getCharacter(),
       range.getEnd().getLine(), range.getEnd().getCharacter());
-    requestSink.add(request);
-    resultStream.listen(id, new com.google.dart.server.internal.remote.processor.DartLspInlayHintsProcessor(consumer));
+    sendRequestToServer(id, request, new com.google.dart.server.internal.remote.processor.DartLspInlayHintsProcessor(consumer));
   }
 
   /**
