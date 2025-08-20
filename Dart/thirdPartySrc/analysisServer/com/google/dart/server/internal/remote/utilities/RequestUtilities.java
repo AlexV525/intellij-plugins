@@ -1230,6 +1230,7 @@ public class RequestUtilities {
   // LSP over Legacy DAS (Dart Analysis Server) protocol below
   //
   public static final String LSP_DART_TEXT_DOCUMENT_CONTENT = "dart/textDocumentContent";
+  public static final String LSP_TEXT_DOCUMENT_INLAY_HINT = "textDocument/inlayHint";
 
   private static final String LSP_HANDLE = "lsp.handle";
 
@@ -1264,6 +1265,31 @@ public class RequestUtilities {
     JsonObject lspParams = new JsonObject();
     lspParams.addProperty("uri", uri);
     return generateLSPMessage(idValue, LSP_DART_TEXT_DOCUMENT_CONTENT, lspParams);
+  }
+
+  public static JsonObject generateLSPMessage_textDocument_inlayHint(String idValue, String uri,
+                                                                     int startLine, int startCharacter,
+                                                                     int endLine, int endCharacter) {
+    JsonObject textDocument = new JsonObject();
+    textDocument.addProperty("uri", uri);
+
+    JsonObject start = new JsonObject();
+    start.addProperty("line", startLine);
+    start.addProperty("character", startCharacter);
+
+    JsonObject end = new JsonObject();
+    end.addProperty("line", endLine);
+    end.addProperty("character", endCharacter);
+
+    JsonObject range = new JsonObject();
+    range.add("start", start);
+    range.add("end", end);
+
+    JsonObject lspParams = new JsonObject();
+    lspParams.add("textDocument", textDocument);
+    lspParams.add("range", range);
+
+    return generateLSPMessage(idValue, LSP_TEXT_DOCUMENT_INLAY_HINT, lspParams);
   }
 
   private RequestUtilities() {

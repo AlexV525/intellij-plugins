@@ -171,6 +171,16 @@
                                           descriptionKey="dart.inlay.hints.closing.labels.description">
     </codeInsight.declarativeInlayProvider>
 
+    <codeInsight.declarativeInlayProvider language="Dart"
+                                          implementationClass="com.jetbrains.lang.dart.hints.inlay.DartParameterNameInlayHintsProvider"
+                                          isEnabledByDefault="true"
+                                          group="OTHER_GROUP"
+                                          providerId="dart.inlay.parameter.names"
+                                          bundle="messages.DartBundle"
+                                          nameKey="dart.inlay.hints.parameter.names.name"
+                                          descriptionKey="dart.inlay.hints.parameter.names.description">
+    </codeInsight.declarativeInlayProvider>
+
     <lang.surroundDescriptor language="Dart"
                              implementationClass="com.jetbrains.lang.dart.ide.surroundWith.DartExpressionSurroundDescriptor"/>
     <lang.surroundDescriptor language="Dart"

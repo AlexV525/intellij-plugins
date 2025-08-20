@@ -2140,6 +2140,35 @@ public final class DartAnalysisServerService implements Disposable {
     return resultRef.get();
   }
 
+  public @Nullable java.util.List<org.dartlang.analysis.server.protocol.DartLspInlayHint> lspMessage_textDocument_inlayHint(@NotNull String fileUri,
+                                                                                                                             @NotNull org.dartlang.analysis.server.protocol.DartLspRange range) {
+    RemoteAnalysisServerImpl server = myServer;
+    if (server == null) return null;
+
+    com.intellij.openapi.util.Ref<java.util.List<org.dartlang.analysis.server.protocol.DartLspInlayHint>> resultRef = new com.intellij.openapi.util.Ref<>();
+    java.util.concurrent.CountDownLatch latch = new java.util.concurrent.CountDownLatch(1);
+
+    server.lspMessage_textDocument_inlayHint(fileUri, range, new com.google.dart.server.DartLspInlayHintsConsumer() {
+      @Override
+      public void computedInlayHints(java.util.List<org.dartlang.analysis.server.protocol.DartLspInlayHint> hints) {
+        resultRef.set(hints);
+        latch.countDown();
+      }
+
+      @Override
+      public void onError(org.dartlang.analysis.server.protocol.RequestError error) {
+        logError("lspMessage_textDocument_inlayHint()", fileUri, error);
+        latch.countDown();
+      }
+    });
+
+    awaitForLatchCheckingCanceled(server, latch, LSP_MESSAGE_TEXT_DOCUMENT_CONTENT_TIMEOUT);
+    if (latch.getCount() > 0) {
+      logTookTooLongMessage("lspMessage_textDocument_inlayHint", LSP_MESSAGE_TEXT_DOCUMENT_CONTENT_TIMEOUT, fileUri);
+    }
+    return resultRef.get();
+  }
+
   private void startServer(final @NotNull DartSdk sdk) {
     if (DartPubActionBase.isInProgress()) return; // DartPubActionBase will start the server itself when finished
 
