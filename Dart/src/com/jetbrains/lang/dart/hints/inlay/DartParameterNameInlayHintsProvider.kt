@@ -4,16 +4,12 @@ import com.intellij.codeInsight.hints.declarative.*
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.DumbService
 import com.intellij.psi.PsiFile
-import com.jetbrains.lang.dart.DartLanguage
 import com.jetbrains.lang.dart.hints.inlay.services.DartInlayHintsService
 
 class DartParameterNameInlayHintsProvider : InlayHintsProvider {
   companion object {
     const val PROVIDER_ID: String = "dart.inlay.parameter.names"
   }
-
-  override fun isLanguageSupported(language: com.intellij.lang.Language): Boolean =
-    language.isKindOf(DartLanguage.INSTANCE)
 
   override fun createCollector(file: PsiFile, editor: Editor): InlayHintsCollector = object : OwnBypassCollector {
     override fun collectHintsForFile(file: PsiFile, sink: InlayTreeSink) {
@@ -25,7 +21,7 @@ class DartParameterNameInlayHintsProvider : InlayHintsProvider {
 
       val doc = editor.document
       for (hint in hints) {
-        val offset = hint.offset ?: continue
+        val offset = hint.offset
         if (offset < 0 || offset > doc.textLength) continue
 
         val pos = InlineInlayPosition(offset, relatedToPrevious = false)

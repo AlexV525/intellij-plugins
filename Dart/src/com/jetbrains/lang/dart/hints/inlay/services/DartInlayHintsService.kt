@@ -6,6 +6,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.jetbrains.lang.dart.analyzer.DartAnalysisServerService
+import com.jetbrains.lang.dart.analyzer.getOffsetInDocument
 import com.jetbrains.lang.dart.hints.inlay.model.DartInlayHint
 import com.jetbrains.lang.dart.hints.inlay.model.DartInlayHintKind
 import com.jetbrains.lang.dart.hints.inlay.psi.PsiParameterNameHintCalculator
@@ -34,7 +35,7 @@ class DartInlayHintsService(private val project: Project) {
           .filter { it.kind == "parameter" }
           .map { hint ->
             // Convert to inline offset as early as possible; if conversion fails, skip.
-            val offset = com.jetbrains.lang.dart.analyzer.getOffsetInDocument(editor.document, hint.position)
+            val offset = getOffsetInDocument(editor.document, hint.position)
             if (offset != null) DartInlayHint(hint.label, DartInlayHintKind.Parameter, offset = offset) else null
           }
           .filterNotNull()
